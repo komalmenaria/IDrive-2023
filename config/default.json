@@ -1,0 +1,4 @@
+{
+    "dbURI": "mongodb+srv://Inotebook:s20w8eYxDqn3GmDN@cluster0.ik9bwas.mongodb.net/Inotebook?retryWrites=true&w=majority",
+    "jwtsecret": "komal"
+}

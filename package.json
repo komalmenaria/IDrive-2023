@@ -1,43 +1,25 @@
 {
-  "name": "google-drive",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@emotion/react": "^11.8.2",
-    "@emotion/styled": "^11.8.1",
-    "@mui/icons-material": "^5.5.0",
-    "@mui/material": "^5.5.0",
-    "@reduxjs/toolkit": "^1.8.0",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
-    "firebase": "^9.6.8",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-redux": "^7.2.6",
-    "react-router-dom": "^6.2.2",
-    "react-scripts": "5.0.0",
-    "styled-components": "^5.3.3"
-  },
+  "name": "my-drive-inotebook",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "config": "^3.3.9",
+    "cors": "^2.8.5",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.0",
+    "http": "^0.0.1-security",
+    "mongodb": "^4.13.0",
+    "mongoose": "^6.8.4",
+    "path": "^0.12.7"
   }
 }
