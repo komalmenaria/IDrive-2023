@@ -1,0 +1,33 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.login-form{
+  font-weight: 500;
+  margin-left: 150px;
+  background-color: #fff;
+  padding: 20px 30px;
+  border-radius: 5px;
+  box-shadow: 10px 20px 50px 5px #818181;
+
+border: 5px solid #008bdc;
+
+}
+
+.register-background{
+  padding: 69px  20px;
+  background-image: url("./assets/register.png");
+ background-position-x: center;
+ background-position-y: bottom;
+ background-size: cover;
+ background-position: bottom;
+}
+.register-form{
+  background-color: #fff;
+  padding: 10px 30px;
+  box-shadow: 10px 20px 50px 5px #ffffff;
+  border-radius: 5px;
+border: 5px solid #008bdc;
+}
