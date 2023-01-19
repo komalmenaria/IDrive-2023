@@ -66,6 +66,8 @@ function Login() {
 
                     <button type="submit" onClick={login} className="btn btn-primary">LOGIN</button>
                     <br />
+                    <Link to="/reset-password" type="button" className="text-danger" > Forget Password </Link>
+                    <br />
                     <br />
                     <Link to="/register" >Not have any account ? <b>Register</b></Link>
 

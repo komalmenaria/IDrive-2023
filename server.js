@@ -17,6 +17,7 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/api',authRoutes);
+// app.use('/api',FolderRoutes);
 
 
 
