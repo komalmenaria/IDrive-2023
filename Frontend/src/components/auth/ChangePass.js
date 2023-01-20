@@ -27,11 +27,12 @@ function Changepass() {
             }
             else {
               console.log(result)
-              // alert.error(result.msg)
+              alert.error(result.msg)
             }
       
           } catch (error) {
-            console.log(error)
+            console.log(error.response.data.msg)
+            alert.error(error.response.data.msg)
             // alert.error(error)
           }
       }

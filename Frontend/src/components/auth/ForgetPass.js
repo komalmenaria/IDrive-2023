@@ -23,12 +23,12 @@ function ForgetPass() {
       }
       else {
         console.log(result)
-        // alert.error(result.msg)
+        alert.error("User not exist")
       }
 
     } catch (error) {
       console.log(error)
-      // alert.error(error)
+      alert.error(error.response.data.msg)
     }
   }
   
