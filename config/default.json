@@ -1,4 +1,6 @@
 {
     "dbURI": "mongodb+srv://Inotebook:s20w8eYxDqn3GmDN@cluster0.ik9bwas.mongodb.net/Inotebook?retryWrites=true&w=majority",
-    "jwtsecret": "komal"
+    "jwtsecret": "komal",
+    "accessKeyId": "AKIA5VRYM7J57R2GUI4R",
+  "secretAccessKey": "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"
 }

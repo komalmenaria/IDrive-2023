@@ -7,6 +7,8 @@ const fileUpload = require("express-fileupload");
 var cors = require('cors')
 
 const authRoutes = require('./routes/auth');
+const folderRoutes = require('./routes/folder');
+const fileRoutes = require('./routes/file')
 
 
 const app = express();
@@ -17,7 +19,9 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/api',authRoutes);
-// app.use('/api',FolderRoutes);
+app.use('/api',folderRoutes);
+app.use('/api',fileRoutes);
+
 
 
 
