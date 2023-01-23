@@ -64,23 +64,27 @@ module.exports.upload_files = async (req, res) => {
                 let key = allfiles[i].name;
                 let foundObj = await folder.FilesName.find(obj => obj.name === key)
                 if (foundObj) {
-                    res.status(400).json({ msg: "file already exist" })
-                    break;
+                    
+                    // 
+                    continue;
                 }
-                folder.FilesName.push({ name: key });
-                const uploadParams = {
+                else{
+                    folder.FilesName.push({ name: key });
+                    const uploadParams = {
+    
+                        Bucket: 'inotebook2023',
+                        Key: `${mongoFolderKey}/${key}`,
+                        Body: allfiles[i].data
+                    };
+                    await s3.upload(uploadParams, (err, data) => {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log(`File ${key} uploaded successfully to folder ${mongoFolderKey}`);
+                        }
+                    });
+                }
 
-                    Bucket: 'inotebook2023',
-                    Key: `${mongoFolderKey}/${key}`,
-                    Body: allfiles[i].data
-                };
-                await s3.upload(uploadParams, (err, data) => {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        console.log(`File ${key} uploaded successfully to folder ${mongoFolderKey}`);
-                    }
-                });
                 
               }
             // await allfiles.forEach(async (file) => {
