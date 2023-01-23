@@ -23,8 +23,8 @@ module.exports.create_folder = async (req, res) => {
         let folder = await Folder.findOne({ folderName, userId })
         if (folder) return res.status(400).json({ msg: "Folder already exists" });
 
-        const folderKey = `${folderName}${userId}/`;
-        const mongoFolderKey = `${folderName}${userId}`
+        const folderKey = `${folderName}_${userId}/`;
+        const mongoFolderKey = `${folderName}_${userId}`
         console.log(folderKey)
         const folderParams = {
             Bucket: "inotebook2023",
