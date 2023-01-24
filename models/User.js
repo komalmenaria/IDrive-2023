@@ -25,6 +25,9 @@ const UserSchema = new Schema({
         type:Number,
         require:[true,'Enter a Role']
     },
+    storage:{
+        type:Number
+    },
     register_date: {
         type: Date,
         default: Date.now

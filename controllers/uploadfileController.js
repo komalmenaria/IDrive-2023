@@ -1,4 +1,5 @@
 const Folder = require("../models/Folder");
+const User = require("../models/User");
 const config = require("config");
 const AWS = require('aws-sdk');
 const accessKeyId = config.get("accessKeyId");
@@ -62,6 +63,8 @@ module.exports.upload_files = async (req, res) => {
         if (Array.isArray(allfiles)) {
             for (let i = 0; i < allfiles.length; i++) {
                 let key = allfiles[i].name;
+                User.storage += allfiles[i].size
+                // console.log(allfiles[i])
                 let foundObj = await folder.FilesName.find(obj => obj.name === key)
                 if (foundObj) {
                     

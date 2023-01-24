@@ -13,7 +13,7 @@ module.exports.signup = async (req, res) => {
 
         let user = await User.findOne({ email })
         if (user) return res.status(400).json({ msg: "User already exists" });
-        const newUser = new User({ name, email, password, role: 1 });
+        const newUser = new User({ name, email, password, role: 1 ,storage:0});
         let hashPassword = await generateHash(password)
         newUser.password = hashPassword;
         await newUser.save()
