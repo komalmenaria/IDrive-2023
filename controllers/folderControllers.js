@@ -57,3 +57,46 @@ module.exports.get_folders = async (req, res) => {
         return res.status(500).json({ msg: "Technical error occured" })
     }
 }
+
+module.exports.delete_folder = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        let folderName = req.params.folderName;
+        let mongoFolderKey = req.params.mongoFolderKey;
+
+        let folder = await Folder.find({ userId, folderName });
+
+        if (folder.length == 0) {
+            return res.status(400).send({ msg: "Folder not found" })
+        }
+        else {
+            let folderName = mongoFolderKey;
+            let params = {
+                Bucket: "inotebook2023"
+            };
+
+            let deleteonaws = await s3.listObjects(params, async function (err, data) {
+                if (err) console.log(err, err.stack);
+                else {
+                    var objects = data.Contents.filter(object => object.Key.startsWith(folderName + '/')).map(object => {
+                        return { Key: object.Key };
+                    });
+                    params = {
+                        Bucket: "inotebook2023",
+                        Delete: { Objects: objects }
+                    };
+                    await s3.deleteObjects(params, function (err, data) {
+                        if (err) console.log(err, err.stack);
+                        else return (data);
+                    });
+                }
+            });
+            await Folder.deleteOne({ _id: folder[0]._id });
+            return res.status(200).json({ msg: "folder deleted successfully" })
+        }
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ msg: "Technical error occured" })
+    }
+}

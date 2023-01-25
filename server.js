@@ -8,7 +8,8 @@ var cors = require('cors')
 
 const authRoutes = require('./routes/auth');
 const folderRoutes = require('./routes/folder');
-const fileRoutes = require('./routes/file')
+const uplodeFileRoutes = require('./routes/uploadFile');
+const createFileRoutes = require('./routes/createFile')
 
 
 const app = express();
@@ -20,7 +21,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/api',authRoutes);
 app.use('/api',folderRoutes);
-app.use('/api',fileRoutes);
+app.use('/api',uplodeFileRoutes);
+app.use('/api',createFileRoutes);
 
 
 
