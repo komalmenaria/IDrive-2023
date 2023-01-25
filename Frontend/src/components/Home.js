@@ -1,6 +1,5 @@
 import React from 'react';
 import StorageImg from "../assets/storage.jpg";
-import AboutImg from "../assets/storage.jpg";
 import { Link } from 'react-router-dom';
 
 function Home() {
