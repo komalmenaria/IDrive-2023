@@ -5,9 +5,9 @@ const auth = require('../middleware/auth');
 
 
 router.get('/folders/:id', auth, folderController.get_folders);
-router.post('/createfolder/:id', auth, folderController.create_folder);
+router.post('/createfolder/:id/:parentFolder', auth, folderController.create_folder);
 // router.put('/folder/:id', auth, folderController.update_folder);
-router.delete('/deletefolder/:id/:mongoFolderKey/:folderName', auth, folderController.delete_folder);
+router.delete('/deletefolder/:id/:folderName', auth, folderController.delete_folder);
 
 
 module.exports = router;

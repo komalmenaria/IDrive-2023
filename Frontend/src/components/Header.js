@@ -12,7 +12,7 @@ function Header() {
         Navigation("/login")
     }
     return (
-        <>
+        <div style={{height:"auto"}}>
             <CreateFile />
             <CreateFolder />
             <UploadFile />
@@ -65,7 +65,7 @@ function Header() {
                     </> : null
             }
 
-        </>
+        </div>
     )
 }
 

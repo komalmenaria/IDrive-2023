@@ -1,6 +1,14 @@
 const User = require("../models/User");
 const Otp = require("../models/Otp");
 var nodemailer = require('nodemailer');
+const config = require("config");
+const AWS = require('aws-sdk');
+const accessKeyId = config.get("accessKeyId");
+const secretAccessKey = config.get("secretAccessKey");
+const s3 = new AWS.S3({
+    accessKeyId: accessKeyId,
+    secretAccessKey: secretAccessKey
+});
 // const {errorHandler} = require("../util")
 const { generateHash, generateToken, compareHash } = require("../util")
 module.exports.signup = async (req, res) => {
@@ -13,7 +21,19 @@ module.exports.signup = async (req, res) => {
 
         let user = await User.findOne({ email })
         if (user) return res.status(400).json({ msg: "User already exists" });
-        const newUser = new User({ name, email, password, role: 1 ,storage:0});
+        let folderName = email.split(/[@]+/);
+        const folderParams = {
+            Bucket: "inotebook2023",
+            Key: `${folderName[0]}/`
+        };
+        await s3.putObject(folderParams, (err, data) => {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log(`Folder ${folderName[0]} created successfully `)
+            }
+        });
+        const newUser = new User({ name, email, password, role: 1 ,storage:0,folder:`${folderName[0]}`});
         let hashPassword = await generateHash(password)
         newUser.password = hashPassword;
         await newUser.save()
@@ -26,7 +46,8 @@ module.exports.signup = async (req, res) => {
                 id: newUser._id,
                 name: newUser.name,
                 email: newUser.email,
-                role: 1
+                role: 1,
+                storage:0
             }
         })
     } catch (error) {
@@ -59,7 +80,8 @@ module.exports.login = async (req, res) => {
                 id: user._id,
                 name: user.name,
                 email: user.email,
-                role: user.role || 1
+                role: 1,
+                storage:0
             }
         })
     } catch (error) {

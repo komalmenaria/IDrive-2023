@@ -13,18 +13,24 @@ module.exports.create_folder = async (req, res) => {
     try {
         let folderName = req.body.folderName;
         let userId = req.params.id;
-
+        let parentFolder = req.params.parentFolder;
+        
         if (!folderName) {
-            res.status(400).json({ msg: "Folder name can't be empty" });
+            return res.status(400).json({ msg: "Folder name can't be empty" });
         }
         else if (!userId) {
-            res.status(400).json({ msg: "User not exist" });
+            return res.status(400).json({ msg: "User ID cant be null" });
         }
+        let user = await User.findOne({ _id :userId})
+        if(!user){
+            return res.status(400).json({ msg: "User not exist with this user Id" });
+        }
+        
         let folder = await Folder.findOne({ folderName, userId })
         if (folder) return res.status(400).json({ msg: "Folder already exists" });
 
-        const folderKey = `${folderName}_${userId}/`;
-        const mongoFolderKey = `${folderName}_${userId}`
+        const folderKey = `${parentFolder}/${folderName}/`;
+        const mongoFolderKey = `${folderName}`;
         console.log(folderKey)
         const folderParams = {
             Bucket: "inotebook2023",
@@ -62,25 +68,35 @@ module.exports.delete_folder = async (req, res) => {
     try {
         const userId = req.params.id;
         let folderName = req.params.folderName;
-        let mongoFolderKey = req.params.mongoFolderKey;
+        // let mongoFolderKey = req.params.mongoFolderKey;
 
         let folder = await Folder.find({ userId, folderName });
-
-        if (folder.length == 0) {
-            return res.status(400).send({ msg: "Folder not found" })
+        let user = await User.findOne({_id: userId })
+        if (!user) {
+            return res.status(400).send({ msg: "User not found" })
+        }
+        if(!folder){
+            return res.status(400).send({ msg: "Folder not exist" })
+        }
+        // console.log(user)
+        let parentFolder = user.folder;
+        // console.log(parentFolder)
+        if (!parentFolder) {
+            return res.status(400).send({ msg: "Parent Folder not found" })
         }
         else {
-            let folderName = mongoFolderKey;
             let params = {
-                Bucket: "inotebook2023"
+                Bucket: "inotebook2023",
+                Prefix: `${parentFolder}/${folderName}/`
             };
 
             let deleteonaws = await s3.listObjects(params, async function (err, data) {
                 if (err) console.log(err, err.stack);
                 else {
-                    var objects = data.Contents.filter(object => object.Key.startsWith(folderName + '/')).map(object => {
-                        return { Key: object.Key };
+                    var objects = data.Contents.map(function(object) {
+                        return {Key: object.Key};
                     });
+                    
                     params = {
                         Bucket: "inotebook2023",
                         Delete: { Objects: objects }
@@ -91,8 +107,9 @@ module.exports.delete_folder = async (req, res) => {
                     });
                 }
             });
-            await Folder.deleteOne({ _id: folder[0]._id });
-            return res.status(200).json({ msg: "folder deleted successfully" })
+            
+              await Folder.deleteOne({ _id: folder[0]._id });
+              return res.status(200).json({ msg: "folder deleted successfully" })
         }
 
     } catch (error) {

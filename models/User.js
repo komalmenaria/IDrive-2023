@@ -16,23 +16,38 @@ const UserSchema = new Schema({
         validate: [isEmail, 'Please enter a valid email']
 
     },
-    password:{
-        type:String,
-        require:[true,'Enter a password'],
-        minlength:[6,'Minimum length of password need to be 6']
+    password: {
+        type: String,
+        require: [true, 'Enter a password'],
+        minlength: [6, 'Minimum length of password need to be 6']
     },
-    role:{
-        type:Number,
-        require:[true,'Enter a Role']
+    role: {
+        type: Number,
+        require: [true, 'Enter a Role']
     },
-    storage:{
-        type:Number
+    storage: {
+        type: Number
     },
+    folder: {
+        type: String,
+    },
+    FilesName: {
+        type: Array,
+        items: {
+          type: String
+        },
+      },
+      ImagesName: {
+        type: Array,
+        items: {
+          type: String
+        },
+      },
     register_date: {
         type: Date,
         default: Date.now
     }
 })
-                        // mongoose.model('ModelName', mySchema)
+// mongoose.model('ModelName', mySchema)
 
-module.exports = User = mongoose.model('user',UserSchema);
+module.exports = User = mongoose.model('user', UserSchema);

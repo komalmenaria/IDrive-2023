@@ -12,11 +12,13 @@ const folderSchema = new Schema({
     type: String,
     required: true
   },
-  mongoFolderKey: {
-    type: String,
-    required: true
-  },
   FilesName: {
+    type: Array,
+    items: {
+      type: String
+    },
+  },
+  ImagesName: {
     type: Array,
     items: {
       type: String
