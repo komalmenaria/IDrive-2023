@@ -47,7 +47,8 @@ module.exports.signup = async (req, res) => {
                 name: newUser.name,
                 email: newUser.email,
                 role: 1,
-                storage:0
+                storage:0,
+                folder:`${folderName[0]}`
             }
         })
     } catch (error) {
@@ -81,7 +82,8 @@ module.exports.login = async (req, res) => {
                 name: user.name,
                 email: user.email,
                 role: 1,
-                storage:0
+                storage:0,
+                folder:user.folder
             }
         })
     } catch (error) {

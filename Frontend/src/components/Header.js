@@ -51,7 +51,8 @@ function Header() {
                     <>
 
                         <div className="dropdown">
-                            <button className="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                        Profile 
+                            <button className="btn btn-secondary dropdown-toggle mx-1" type="button" data-toggle="dropdown" aria-expanded="false">
 
                                 {newUser && newUser.name}
                             </button>

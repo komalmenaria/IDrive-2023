@@ -14,18 +14,18 @@ module.exports.create_folder = async (req, res) => {
         let folderName = req.body.folderName;
         let userId = req.params.id;
         let parentFolder = req.params.parentFolder;
-        
+
         if (!folderName) {
             return res.status(400).json({ msg: "Folder name can't be empty" });
         }
         else if (!userId) {
             return res.status(400).json({ msg: "User ID cant be null" });
         }
-        let user = await User.findOne({ _id :userId})
-        if(!user){
+        let user = await User.findOne({ _id: userId })
+        if (!user) {
             return res.status(400).json({ msg: "User not exist with this user Id" });
         }
-        
+
         let folder = await Folder.findOne({ folderName, userId })
         if (folder) return res.status(400).json({ msg: "Folder already exists" });
 
@@ -40,12 +40,12 @@ module.exports.create_folder = async (req, res) => {
             if (err) {
                 console.log(err);
             } else {
-                console.log(`Folder ${folderName} created successfully `)
+                console.log(`${folderName} created successfully `)
             }
         });
         const newFolder = new Folder({ folderName, userId, mongoFolderKey });
         await newFolder.save()
-        res.status(200).send({ msg: `Folder ${folderName} created successfully` })
+        res.status(200).send({ msg: `${folderName} created successfully` })
 
     } catch (error) {
         console.log(error)
@@ -71,11 +71,11 @@ module.exports.delete_folder = async (req, res) => {
         // let mongoFolderKey = req.params.mongoFolderKey;
 
         let folder = await Folder.find({ userId, folderName });
-        let user = await User.findOne({_id: userId })
+        let user = await User.findOne({ _id: userId })
         if (!user) {
             return res.status(400).send({ msg: "User not found" })
         }
-        if(!folder){
+        if (!folder) {
             return res.status(400).send({ msg: "Folder not exist" })
         }
         // console.log(user)
@@ -90,30 +90,37 @@ module.exports.delete_folder = async (req, res) => {
                 Prefix: `${parentFolder}/${folderName}/`
             };
 
-            let deleteonaws = await s3.listObjects(params, async function (err, data) {
+            let deleteonaws = await s3.listObjectsV2(params, async function (err, data) {
                 if (err) console.log(err, err.stack);
                 else {
-                    var objects = data.Contents.map(function(object) {
-                        return {Key: object.Key};
+                    let folderSize = 0;
+                    data.Contents.forEach((object) => {
+                        folderSize += object.Size;
                     });
-                    
-                    params = {
-                        Bucket: "inotebook2023",
-                        Delete: { Objects: objects }
-                    };
-                    await s3.deleteObjects(params, function (err, data) {
-                        if (err) console.log(err, err.stack);
-                        else return (data);
-                    });
-                }
-            });
+                    user.storage -= folderSize;
+                    user.save()
             
-              await Folder.deleteOne({ _id: folder[0]._id });
-              return res.status(200).json({ msg: "folder deleted successfully" })
+            var objects = data.Contents.map(function (object) {
+                return { Key: object.Key };
+            });
+
+            params = {
+                Bucket: "inotebook2023",
+                Delete: { Objects: objects }
+            };
+            await s3.deleteObjects(params, function (err, data) {
+                if (err) console.log(err, err.stack);
+                else return (data);
+            });
         }
+    });
+
+    await Folder.deleteOne({ _id: folder[0]._id });
+    return res.status(200).json({ msg: "folder deleted successfully" })
+}
 
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ msg: "Technical error occured" })
-    }
+    console.log(error)
+    return res.status(500).json({ msg: "Technical error occured" })
+}
 }

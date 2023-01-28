@@ -145,9 +145,7 @@ module.exports.upload_files = async (req, res) => {
         else {
             let key = allfiles.name;
             let fileExtension = key.split('.').pop()
-               
             user.storage += allfiles.size
-            // console.log(allfiles[i])
             let foundObj1 = await user.FilesName.find(obj => obj.name === key)
             let foundObj2 = await user.ImagesName.find(obj => obj.name === key)
 
@@ -248,6 +246,7 @@ module.exports.upload_files_folder = async (req, res) => {
 
                 
               }
+            user.save()
             folder.save()
             return res.status(200).send({ msg: "files uploded successfully" })
 
@@ -284,6 +283,7 @@ module.exports.upload_files_folder = async (req, res) => {
                 }
             });
             user.save()
+            folder.save()
             return res.status(200).send({ msg: "files uploded successfully" })
         }
 

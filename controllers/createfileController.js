@@ -22,7 +22,7 @@ module.exports.create_file_folder = async (req, res) => {
         let userId = req.params.userId;
         let folderName = req.params.folderName
         let FileName = req.body.fileName;
-        let user = await User.findOne({_id: userId })
+        let user = await User.findOne({ _id: userId })
         if (!user) {
             return res.status(400).send({ msg: "User not found" })
         }
@@ -48,6 +48,7 @@ module.exports.create_file_folder = async (req, res) => {
                 }
             });
             const createdFile = fs.createReadStream(FileName);
+            console.log(createdFile.bytesRead)
             const uploadParams = {
 
                 Bucket: 'inotebook2023',
@@ -77,7 +78,7 @@ module.exports.read_file_folder = async (req, res) => {
     try {
         let userId = req.params.userId;
         let folderName = req.params.folderName
-        let user = await User.findOne({_id: userId })
+        let user = await User.findOne({ _id: userId })
         if (!user) {
             return res.status(400).send({ msg: "User not found" })
         }
@@ -114,7 +115,7 @@ module.exports.update_file_folder = async (req, res) => {
     try {
         let userId = req.params.userId;
         let folderName = req.params.folderName
-        let user = await User.findOne({_id: userId })
+        let user = await User.findOne({ _id: userId })
         if (!user) {
             return res.status(400).send({ msg: "User not found" })
         }
@@ -132,30 +133,38 @@ module.exports.update_file_folder = async (req, res) => {
         }
         let key = foundObj.name
         // Download the file from S3
-        s3.getObject({
+        await s3.getObject({
             Bucket: 'inotebook2023',
             Key: `${user.folder}/${folderName}/${key}`,
-        }, (err, data) => {
+        }, async (err, data) => {
             if (err) throw err;
 
             // Update the file content
-            let fileContent = data.Body.toString();
-            fileContent = fileContent.replace(fileContent, req.body.contentFile);
+            let fileContent = await data.Body.toString();
 
+            fileContent = await fileContent.replace(fileContent, req.body.contentFile);
             // Write the updated content to a local file
-            fs.writeFileSync(key, fileContent);
+            await fs.writeFileSync(key, fileContent);
 
             // Upload the updated file to S3
-            fs.readFile(key, (err, data) => {
+            await fs.readFile(key, async (err, data) => {
                 if (err) throw err;
+                fs.stat(key, (err, stat) => {
+                    if (err) throw err;
+                    const fileSizeInBytes = stat.size;
+                    console.log(fileSizeInBytes + 'Bytes');
+                    user.storage += fileSizeInBytes
+                    user.save()
 
-                s3.putObject({
+                });
+
+                await s3.putObject({
                     Bucket: 'inotebook2023',
                     Key: `${user.folder}/${folderName}/${key}`,
                     Body: data
                 }, (err) => {
                     if (err) throw err;
-                    return res.status(200).json({msg:'File updated successfully!'})
+                    return res.status(200).json({ msg: 'File updated successfully!' })
                 });
             });
         });
@@ -170,7 +179,7 @@ module.exports.delete_file_folder = async (req, res) => {
     try {
         let userId = req.params.userId;
         let folderName = req.params.folderName
-        let user = await User.findOne({_id: userId })
+        let user = await User.findOne({ _id: userId })
         if (!user) {
             return res.status(400).send({ msg: "User not found" })
         }
@@ -186,15 +195,27 @@ module.exports.delete_file_folder = async (req, res) => {
         if (!foundObj) {
             return res.status(400).json({ msg: "File not exist" });
         }
-        await s3.deleteObject({ Bucket: 'inotebook2023', Key: `${user.folder}/${folderName}/${foundObj.name}` }, (err, data) => {
+        const params = {
+            Bucket: 'inotebook2023',
+            Key: `${user.folder}/${folderName}/${foundObj.name}`
+        };
+
+        await s3.headObject(params, async (err, data) => {
             if (err) {
                 console.log(err);
-                
-                return;
+            } else {
+                user.storage -= data.ContentLength
+                await user.save()
+                await s3.deleteObject(params, (err, data) => {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    console.log(`Successfully deleted file ${foundObj.name} from folder ${user.folder}/${folderName}`);
+                });
             }
-            console.log(`Successfully deleted file ${foundObj.name} from folder ${user.folder}/${folderName}`);
-
         });
+
         await Folder.findOneAndUpdate({ $pull: { "FilesName": { name: fileName } } })
         return res.status(200).send({ msg: "File deleted Successfully" })
 
@@ -210,7 +231,7 @@ module.exports.create_file = async (req, res) => {
     try {
         let userId = req.params.userId;
         let FileName = req.body.fileName;
-        let user = await User.findOne({_id: userId })
+        let user = await User.findOne({ _id: userId })
         if (!user) {
             return res.status(400).send({ msg: "User not found" })
         }
@@ -261,7 +282,7 @@ module.exports.read_file = async (req, res) => {
     try {
         let userId = req.params.userId;
         let FileName = req.params.fileName;
-        let user = await User.findOne({_id: userId })
+        let user = await User.findOne({ _id: userId })
         if (!user) {
             return res.status(400).send({ msg: "User not found" })
         }
@@ -293,7 +314,7 @@ module.exports.update_file = async (req, res) => {
     try {
         let userId = req.params.userId;
         let FileName = req.params.fileName;
-        let user = await User.findOne({_id: userId })
+        let user = await User.findOne({ _id: userId })
         if (!user) {
             return res.status(400).send({ msg: "User not found" })
         }
@@ -306,10 +327,10 @@ module.exports.update_file = async (req, res) => {
         }
         let key = foundObj.name
         // Download the file from S3
-        s3.getObject({
+        await s3.getObject({
             Bucket: 'inotebook2023',
             Key: `${user.folder}/${key}`,
-        }, (err, data) => {
+        }, async (err, data) => {
             if (err) throw err;
 
             // Update the file content
@@ -317,22 +338,28 @@ module.exports.update_file = async (req, res) => {
             fileContent = fileContent.replace(fileContent, req.body.contentFile);
 
             // Write the updated content to a local file
-            fs.writeFileSync(key, fileContent);
+            await fs.writeFileSync(key, fileContent);
 
             // Upload the updated file to S3
-            fs.readFile(key, (err, data) => {
+            fs.readFile(key, async (err, data) => {
                 if (err) throw err;
-
-                s3.putObject({
+                await fs.stat(key, async (err, stat) => {
+                    if (err) throw err;
+                    const fileSizeInBytes = stat.size;
+                    user.storage += fileSizeInBytes
+                    await user.save()
+                });
+                await s3.putObject({
                     Bucket: 'inotebook2023',
                     Key: `${user.folder}/${key}`,
                     Body: data
                 }, (err) => {
                     if (err) throw err;
-                    return res.status(200).json({msg:'File updated successfully!'})
+                    return res.status(200).json({ msg: 'File updated successfully!' })
                 });
             });
         });
+
 
     } catch (error) {
         console.log(error)
@@ -344,7 +371,7 @@ module.exports.delete_file = async (req, res) => {
     try {
         let userId = req.params.userId;
         let FileName = req.params.fileName;
-        let user = await User.findOne({_id: userId })
+        let user = await User.findOne({ _id: userId })
         if (!user) {
             return res.status(400).send({ msg: "User not found" })
         }
@@ -355,16 +382,29 @@ module.exports.delete_file = async (req, res) => {
         if (!foundObj) {
             return res.status(400).json({ msg: "File not exist" });
         }
-        await s3.deleteObject({ Bucket: 'inotebook2023', Key: `${user.folder}/${foundObj.name}` }, (err, data) => {
+        const params = {
+            Bucket: 'inotebook2023',
+            Key: `${user.folder}/${foundObj.name}`
+        };
+
+        await s3.headObject(params, async (err, data) => {
             if (err) {
                 console.log(err);
-                
-                return;
+            } else {
+                user.storage -= data.ContentLength
+                await user.save()
+                await s3.deleteObject(params, (err, data) => {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    console.log(`Successfully deleted file ${foundObj.name} from folder ${user.folder}`);
+                });
             }
-            console.log(`Successfully deleted file ${foundObj.name} from folder ${user.folder}`);
-
         });
+
         await User.findOneAndUpdate({ $pull: { "FilesName": { name: FileName } } })
+
         return res.status(200).send({ msg: "File deleted Successfully" })
 
     } catch (error) {
