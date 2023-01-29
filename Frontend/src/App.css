@@ -70,15 +70,27 @@ border: 5px solid #008bdc;
   margin-top:20px
 }
 
-
+.store-image{
+  object-fit: cover;
+}
 .single-file{
   text-decoration:none;
   background-color:#008bdc;
   color:#fff;
   padding: 10px 20px ;
-  border-radius:5px
-
+  border-radius:5px;
+  cursor:pointer
 }
 .single-file:hover{
   text-decoration:none;
+}
+.badge {
+
+  vertical-align: top !important;
+  margin-left: -22px !important;
+  cursor: pointer;
+  line-height: 10px !important;
+  font-size: 15px;
+  padding: 8px !important;
+
 }

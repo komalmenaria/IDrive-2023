@@ -2,39 +2,45 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useAlert } from 'react-alert';
 
-function CreateFolder() {
+function CreateFolder({ onUpdate }) {
+
     const alert = useAlert();
     const newUser = JSON.parse(localStorage.getItem("user-info"))
     const token = localStorage.getItem("token");
     const [folderName, setfolderName] = useState('')
     var FormData = require('form-data');
     var data = new FormData();
-data.append('folderName', folderName);
+    data.append('folderName', folderName);
 
     async function FolderCreate() {
         try {
             let result = await axios.post(`http://localhost:4000/api/createfolder/${newUser.id}/${newUser.folder}`, data, {
-            headers: {
-                'x-auth-token': token
-            }
-        })
-        if (result.status == 200) {
-            alert.success(result.data.msg);
-        }else{
-            console.log(result)
-        }
+                headers: {
+                    'x-auth-token': token
+                }
+            })
+            if (result.status === 200) {
+                alert.success(result.data.msg);
+               
+            } else {
+                console.log(result.response.data.msg)
+                alert.error(result.response.data.msg)
+              }
 
-        document.getElementById('createFolder-close').click()
+            
         } catch (error) {
             console.log(error)
+            alert.error(error.response.data.msg)
         }
+        document.getElementById('createFolder-close').click()
+        onUpdate(folderName)
     }
     return (
         <>
 
 
 
-            <div className="modal fade" id="createFolder" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div className="modal fade" id="createFolder" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">

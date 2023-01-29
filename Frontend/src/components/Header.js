@@ -4,7 +4,8 @@ import CreateFile from './Data/CreateFile';
 import CreateFolder from './Data/CreateFolder';
 import UploadFile from './Data/UploadFile';
 
-function Header() {
+function Header({ onGrandchildUpdate }) {
+  
     const Navigation = useNavigate()
     let newUser = JSON.parse(localStorage.getItem("user-info"))
     function logout() {
@@ -13,9 +14,9 @@ function Header() {
     }
     return (
         <div >
-            <CreateFile />
-            <CreateFolder />
-            <UploadFile />
+            <CreateFile onUpdate={onGrandchildUpdate} />
+            <CreateFolder onUpdate={onGrandchildUpdate} />
+            <UploadFile onUpdate={onGrandchildUpdate} />
             <form className=" form-inline my-3 ">
              
                 <input className="form-control mr-sm-2" type="search" placeholder="Search Your Document" aria-label="Search" id='Search'/>

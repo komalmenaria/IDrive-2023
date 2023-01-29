@@ -8,6 +8,7 @@ import About from './About';
 import ForgetPass from './auth/ForgetPass';
 import Store from './Store';
 import Footer from './Footer';
+import ReadFile from './Data/ReadFile';
 function Main() {
   return (
     <div>
@@ -21,6 +22,7 @@ function Main() {
                     <Route exact path="/login" element={<Login />} />
                     <Route exact path="/reset-password" element={<ForgetPass />} />
                     <Route exact path="/register" element={<Register />} />
+                    <Route exact path="/readfile/:fileName" element={<ReadFile />} />
                 </Routes>
                 <Footer />
             </Router>

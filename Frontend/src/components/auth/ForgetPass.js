@@ -17,7 +17,7 @@ function ForgetPass() {
 
       let result = await axios.post(`http://localhost:4000/api/email-send`, formData);
 
-      if (result.status == 200) {
+      if (result.status === 200) {
         alert.success(result.data.msg);
         setotpForm(false)
       }
@@ -31,8 +31,8 @@ function ForgetPass() {
       alert.error(error.response.data.msg)
     }
   }
-  
-  
+
+
   return (
     <>
       <div className="container">
@@ -45,7 +45,7 @@ function ForgetPass() {
             {otpForm ?
               <>
                 <div className="form-group">
-                  <label for="exampleInputEmail1">Email address</label>
+                  <label htmlFor="exampleInputEmail1">Email address</label>
                   <input type="email" className="form-control" onChange={(e) => setEmail(e.target.value)} id="email" aria-describedby="emailHelp" required />
 
                 </div>

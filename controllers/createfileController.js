@@ -225,6 +225,56 @@ module.exports.delete_file_folder = async (req, res) => {
     }
 }
 
+module.exports.delete_image_folder = async (req, res) => {
+    try {
+        let userId = req.params.userId;
+        let folderName = req.params.folderName
+        let user = await User.findOne({ _id: userId })
+        if (!user) {
+            return res.status(400).send({ msg: "User not found" })
+        }
+        let folder = await Folder.findOne({ userId, folderName })
+        if (!folder) {
+            return res.status(400).json({ msg: "folder not exist" });
+        }
+        let ImageName = req.params.imageName;
+        if (!ImageName) {
+            return res.status(400).json({ msg: "Image name is required" });
+        }
+        let foundObj = await folder.ImagesName.find(obj => obj.name === ImageName)
+        if (!foundObj) {
+            return res.status(400).json({ msg: "Image not exist" });
+        }
+        const params = {
+            Bucket: 'inotebook2023',
+            Key: `${user.folder}/${folderName}/${foundObj.name}`
+        };
+
+        await s3.headObject(params, async (err, data) => {
+            if (err) {
+                console.log(err);
+            } else {
+                user.storage -= data.ContentLength
+                await user.save()
+                await s3.deleteObject(params, (err, data) => {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    console.log(`Successfully deleted Image ${foundObj.name} from folder ${user.folder}/${ImageName}`);
+                });
+            }
+        });
+
+        await Folder.findOneAndUpdate({ $pull: { "ImagesName": { name: ImageName } } })
+        return res.status(200).send({ msg: "Image deleted Successfully" })
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ msg: "Technical error occured" })
+    }
+}
+
 
 
 module.exports.create_file = async (req, res) => {
@@ -270,7 +320,7 @@ module.exports.create_file = async (req, res) => {
         }
 
         await user.save()
-        return res.status(200).send({ msg: "files created successfully" })
+        return res.status(200).send({ msg: "file created successfully" })
 
     }
     catch (error) {
@@ -406,6 +456,52 @@ module.exports.delete_file = async (req, res) => {
         await User.findOneAndUpdate({ $pull: { "FilesName": { name: FileName } } })
 
         return res.status(200).send({ msg: "File deleted Successfully" })
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ msg: "Technical error occured" })
+    }
+}
+
+module.exports.delete_image = async (req, res) => {
+    try {
+        let userId = req.params.userId;
+        let ImageName = req.params.imageName;
+        let user = await User.findOne({ _id: userId })
+        if (!user) {
+            return res.status(400).send({ msg: "User not found" })
+        }
+        if (!ImageName) {
+            return res.status(400).json({ msg: "image name cant be empty" });
+        }
+        let foundObj = await user.ImagesName.find(obj => obj.name === ImageName)
+        if (!foundObj) {
+            return res.status(400).json({ msg: "Image not exist" });
+        }
+        const params = {
+            Bucket: 'inotebook2023',
+            Key: `${user.folder}/${foundObj.name}`
+        };
+
+        await s3.headObject(params, async (err, data) => {
+            if (err) {
+                console.log(err);
+            } else {
+                user.storage -= data.ContentLength
+                await user.save()
+                await s3.deleteObject(params, (err, data) => {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    console.log(`Successfully deleted Image ${foundObj.name} from folder ${user.folder}`);
+                });
+            }
+        });
+
+        await User.findOneAndUpdate({ $pull: { "ImagesName": { name: ImageName } } })
+
+        return res.status(200).send({ msg: "Image deleted Successfully" })
 
     } catch (error) {
         console.log(error)
