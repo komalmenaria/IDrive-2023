@@ -9,6 +9,7 @@ import ForgetPass from './auth/ForgetPass';
 import Store from './Store';
 import Footer from './Footer';
 import ReadFile from './Data/ReadFile';
+import Folder from './Folder';
 function Main() {
   return (
     <div>
@@ -23,6 +24,7 @@ function Main() {
                     <Route exact path="/reset-password" element={<ForgetPass />} />
                     <Route exact path="/register" element={<Register />} />
                     <Route exact path="/readfile/:fileName" element={<ReadFile />} />
+                    <Route exact path="/:folderName" element={<Folder />} />
                 </Routes>
                 <Footer />
             </Router>

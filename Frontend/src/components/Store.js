@@ -92,6 +92,10 @@ function Store() {
             }
         }
     }
+    function handlefolder(folder){
+        console.log(folder.folderName)
+        Navigate(`/${folder.folderName}`)
+    }
     useEffect(() => {
         getFolders()
         getFiles()
@@ -113,11 +117,11 @@ function Store() {
                             {allFolders && allFolders.length ?
                                 (
                                     allFolders.map((folder) => (
-                                        <span key={folder.folderName} className='single-folder'>{folder.folderName}</span>
+                                        <span key={folder.folderName} onClick={() => handlefolder(folder)} className='single-folder'>{folder.folderName}</span>
                                     ))
                                 )
                                 :
-                                (<h3>You have no folder </h3>)}
+                                (<h4>You have no folder </h4>)}
 
 
                         </div>
@@ -132,7 +136,7 @@ function Store() {
                                     ))
                                 )
                                 :
-                                (<h3>You have no Files </h3>)}
+                                (<h4>You have no Files </h4>)}
 
 
                         </div>
@@ -151,7 +155,7 @@ function Store() {
                                     ))
                                 )
                                 :
-                                (<h3>You have no Images </h3>)}
+                                (<h4>You have no Images </h4>)}
 
 
                         </div>
