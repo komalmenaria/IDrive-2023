@@ -10,6 +10,7 @@ const authRoutes = require('./routes/auth');
 const folderRoutes = require('./routes/folder');
 const uplodeFileRoutes = require('./routes/uploadFile');
 const createFileRoutes = require('./routes/createFile')
+const createBillRoutes = require('./routes/bill')
 
 
 const app = express();
@@ -23,6 +24,7 @@ app.use('/api',authRoutes);
 app.use('/api',folderRoutes);
 app.use('/api',uplodeFileRoutes);
 app.use('/api',createFileRoutes);
+app.use('/api',createBillRoutes);
 
 
 

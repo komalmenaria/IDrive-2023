@@ -93,11 +93,11 @@ module.exports.upload_files = async (req, res) => {
             return res.status(400).json({ msg: "folder not exist" });
         }
         if(req.files == null){
-            return res.status(400).json({ msg: "File cant be blank" });
+            return res.status(400).json({ msg: "Files cant be blank" });
         }
         let allfiles = req.files.files;
         if (!allfiles) {
-            return res.status(400).json({ msg: "File cant be blank" });
+            return res.status(400).json({ msg: "Files cant be blank" });
         }
         // console.log(allfiles)
         if (Array.isArray(allfiles)) {
@@ -194,9 +194,12 @@ module.exports.upload_files_folder = async (req, res) => {
         let folderName = req.params.folderName;
         let folder = await Folder.findOne({ userId, folderName })
         let user = await User.findOne({ _id: userId })
+        if(req.files == null){
+            return res.status(400).json({ msg: "Files cant be blank" });
+        }
         let allfiles = req.files.files;
         if (!allfiles) {
-            return res.status(400).json({ msg: "File cant be blank" });
+            return res.status(400).json({ msg: "Files cant be blank" });
         }
         if (!user) {
             return res.status(400).json({ msg: "User not exist with this user Id" });

@@ -1,25 +1,56 @@
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 import { useNavigate } from 'react-router-dom';
-import CreateFile from './Data/CreateFile';
-import CreateFolder from './Data/CreateFolder';
-import UploadFile from './Data/UploadFile';
+import CreateFile from './CreateFile';
+import CreateFolder from './CreateFolder';
+import UploadFile from './UploadFile';
 
 function Header({ onGrandchildUpdate }) {
-  
+
     const Navigation = useNavigate()
     let newUser = JSON.parse(localStorage.getItem("user-info"))
     function logout() {
         localStorage.clear()
         Navigation("/login")
     }
+    const [ storage , setStorage] = useState(0)
+    const token = localStorage.getItem("token");
+
+    const  bytesToHumanReadable = (
+        () => {
+    let bytes = newUser.storage
+
+            const units = ['B', 'KB', 'MB', 'GB'];
+            let unitIndex = 0;
+          
+            while (bytes >= 1024 && unitIndex < units.length - 1) {
+              bytes /= 1024;
+              unitIndex++;
+            }
+          
+            setStorage(`${bytes.toFixed(2)} ${units[unitIndex]}`);
+          }
+    )
+    
+  useEffect(() => {
+    
+    if (!token) {
+      Navigation("/login")
+    }
+    bytesToHumanReadable()
+    const rangeInput = document.getElementById('formControlRange');
+    
+    rangeInput.min = 0;
+    rangeInput.max = 100;
+    rangeInput.value =  Math.floor(storage);
+  }, []);
     return (
         <div >
             <CreateFile onUpdate={onGrandchildUpdate} />
             <CreateFolder onUpdate={onGrandchildUpdate} />
             <UploadFile onUpdate={onGrandchildUpdate} />
             <form className=" form-inline my-3 ">
-             
-                <input className="form-control mr-sm-2" type="search" placeholder="Search Your Document" aria-label="Search" id='Search'/>
+
+                <input className="form-control mr-sm-2" type="search" placeholder="Search Your Document" aria-label="Search" id='Search' />
                 <button className="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
             </form>
             <div className=" d-flex flex-column my-5">
@@ -34,14 +65,14 @@ function Header({ onGrandchildUpdate }) {
                 </button>
             </div>
             <div className=" d-flex flex-column my-5">
-           <div className="d-flex align-items-center ">
-           <span className='cloud-icon'> &#9729;</span> <h3> Storage </h3>
-           </div>
+                <div className="d-flex align-items-center ">
+                    <span className='cloud-icon'> &#9729;</span> <h3> Storage </h3>
+                </div>
                 <form>
                     <div className="form-group">
                         <input type="range" className="form-control-range" id="formControlRange" />
                     </div>
-                    <center className='my-1'>1.57 GB of 15.00 GB used</center>
+                    <center className='my-1'>{storage}  of 15.00 GB used</center>
                     <center><button className='btn btn-primary my-1'>Buy Storage</button></center>
                 </form>
             </div>
@@ -52,7 +83,7 @@ function Header({ onGrandchildUpdate }) {
                     <>
 
                         <div className="dropdown">
-                        Profile 
+                            Profile
                             <button className="btn btn-secondary dropdown-toggle mx-1" type="button" data-toggle="dropdown" aria-expanded="false">
 
                                 {newUser && newUser.name}

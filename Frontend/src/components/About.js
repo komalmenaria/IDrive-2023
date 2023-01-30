@@ -14,7 +14,6 @@ function About() {
       <div className="jumbotron jumbotron-fluid  about-container">
         <div className="container ">
           <h1 className="display-4">About Us</h1>
-
           <p className="lead" > In today’s era we are unable to remember Everything. We get so busy in the schedule of life that we forget small things. Sometimes we forget our email id – password, Aadhar Card, Pen Card and many more essential documents. And then we face a lot of trouble, and that we have to visit our home again or we have to call someone to send our documents.</p>
 
           <p className="lead" >Inotebook is the website or we can say the app where we can store our notes, our passwords, our essential documents or files and photos etc.</p>

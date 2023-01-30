@@ -33,7 +33,7 @@ module.exports.signup = async (req, res) => {
                 console.log(`Folder ${folderName[0]} created successfully `)
             }
         });
-        const newUser = new User({ name, email, password, role: 1 ,storage:0,folder:`${folderName[0]}`});
+        const newUser = new User({ name, email, password, role: 1 ,storage:0,provided_Storage:5,folder:`${folderName[0]}`});
         let hashPassword = await generateHash(password)
         newUser.password = hashPassword;
         await newUser.save()
@@ -48,6 +48,7 @@ module.exports.signup = async (req, res) => {
                 email: newUser.email,
                 role: 1,
                 storage:0,
+                provided_Storage:newUser.provided_Storage,
                 folder:`${folderName[0]}`
             }
         })
@@ -75,6 +76,8 @@ module.exports.login = async (req, res) => {
             return res.status(401).json({ msg: "Password doesnt match" });
         }
         let jwtToken = await generateToken({ id: user._id })
+
+    
         res.send({
             token: jwtToken,
             user: {
@@ -82,7 +85,7 @@ module.exports.login = async (req, res) => {
                 name: user.name,
                 email: user.email,
                 role: 1,
-                storage:0,
+                storage:user.storage,
                 folder:user.folder
             }
         })

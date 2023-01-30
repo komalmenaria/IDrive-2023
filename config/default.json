@@ -2,5 +2,7 @@
     "dbURI": "mongodb+srv://komal:l2zng12DmpIsjBV4@cluster0.ik9bwas.mongodb.net/Inotebook?retryWrites=true&w=majority",
     "jwtsecret": "komal",
     "accessKeyId": "AKIA5VRYM7J57R2GUI4R",
-  "secretAccessKey": "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"
+  "secretAccessKey": "GK3FLskzVnbW9u7NJeqPrvyUHq82ubR9vYVRgLo0",
+  "key_id": "rzp_test_MZKmCG9d2PjRde",
+    "key_secret": "nkNGNWpLJD8zt2stQuQHfSxe"
 }

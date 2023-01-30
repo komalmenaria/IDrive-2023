@@ -30,12 +30,12 @@ function Login() {
                 }
             });
 
-            if (result.status == 200) {
+            if (result.status === 200) {
                 alert.success("Login Successfully")
                 result = await result.json()
                 localStorage.setItem("token", result.token)
                 localStorage.setItem("user-info", JSON.stringify(result.user))
-                Navigation("/about")
+                Navigation("/store")
                 console.log(result)
             }else{
                 result = await result.json()

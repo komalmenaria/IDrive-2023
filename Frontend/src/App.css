@@ -34,6 +34,7 @@ border: 5px solid #008bdc;
 .about-container > p{
   font-size: 20px;
   font-weight: 500;
+  overflow:"hidden"
 }
 .about-container{
   margin-bottom: 0 !important;
@@ -68,9 +69,20 @@ border: 5px solid #008bdc;
   align-items: center;
   text-align: center;
   width: 100%;
-  margin-top:20px
+  position:absolute;
+  bottom:0
 }
-
+.frame-image-div{
+  height:290px;
+  overflow: scroll
+}
+.frame-folder-image-div{
+  height:450px;
+  overflow: scroll
+}
+.store , .folder{
+  overflow:hidden;
+}
 .store-image{
   object-fit: cover;
 }

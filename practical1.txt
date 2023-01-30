@@ -1,1 +1,23 @@
-hello komal menaria 2 hiii i am update from backend again
+Practical 1
+komal
+% - Percentage symbol is used for comments  
+% Practical 1 - Displaying a Grey Scale Image
+
+clc;
+clear all;
+close all;
+
+% Reading the image
+a = imread('E:\komalmenaria\IMG-20221108-WA0075.jpg')
+
+% Converting Color image to Grey Scale image
+b = rgb2gray(a)
+
+subplot(1,2,1);
+imshow(a)
+title('Color Image');
+subplot(1,2,2);
+imshow(b)
+title('Grey Scalled image');
+
+

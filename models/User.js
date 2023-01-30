@@ -28,6 +28,9 @@ const UserSchema = new Schema({
     storage: {
         type: Number
     },
+    provided_Storage: {
+        type: Number
+    },
     folder: {
         type: String,
     },
