@@ -11,18 +11,12 @@ function Checkout() {
     const [storage, setStorage] = useState(0);
     const [amount, setAmount] = useState(0);
 
-
-    const FormData = require('form-data');
-    const formdata = new FormData();
-    formdata.append('name', name);
-    formdata.append('email', email);
-    formdata.append('storage', storage);
-    formdata.append('amount', amount);
-
+   
     const token = localStorage.getItem("token");
     const newUser = JSON.parse(localStorage.getItem("user-info"))
 
-    let item = { name, email, storage,amount }
+ 
+
     function loadScript(src) {
         return new Promise((resolve) => {
             const script = document.createElement("script");
@@ -66,82 +60,87 @@ function Checkout() {
       }
 
     async function handlePaymentProceed() {
-       console.log(formdata)
-
+       
+        const formdata = new FormData();
+        formdata.append('name', name);
+        formdata.append('email', email);
+        formdata.append('storage', storage);
+        formdata.append('amount', amount);
+    
         const res = await loadScript(
             "https://checkout.razorpay.com/v1/checkout.js"
             
         );
 
         if (!res) {
-            alert("Razorpay SDK failed to load. Are you online?");
+            alert.error("Razorpay SDK failed to load. Are you online?");
             return;
         }
 
     try {
-        let result = await fetch(`http://localhost:4000/api/checkout/${newUser.id}`,{
-            method: 'POST',
-            body:JSON.stringify(item),
-            headers: {
-              "x-auth-token": token
-            }});
-            if (!result) {
-              alert("Server error. Are you online?");
-              return;
-          }
-          
-          result = await result.json();
-             // Getting the order details back
-      //  const { amount, id: order_id, currency } = result.data;
-      if(result.status !== 200){
-        alert.error(result.response.data.msg)
-      }
-      let options = {
-        "key": "rzp_test_MZKmCG9d2PjRde",
-        "amount": amount,
-        "name": "Inotebook",
-        "currency":"INR",
-        "order_id": result.id,    
-        "handler": async function (response){
-          console.log(JSON.stringify(response))
-          // alert.success(response.razorpay_payment_id);
-          // alert.success(response.razorpay_order_id);
-          // alert.success(response.razorpay_signature)
-          try{
-           await verifyPayment(response)
 
-          }
-          catch(error){
-            console.log(error)
-          }
-        },
-        "prefill": {
-            "email": result.receipt
-        },
-        "theme": {
-            "color": "#61dafb"
+
+         await axios.post(`http://localhost:4000/api/checkout/${newUser.id}` ,
+        formdata,
+        {
+         headers: {
+           "x-auth-token":  token //the token is a variable which holds the token
+         }
         }
-    };
-    console.log(options)
-    const rzp1 = new window.Razorpay(options); //instead of new Razorpay(options)
-    rzp1.on('payment.failed', function (response){
-      alert.error(response.error.code);
-      alert.error(response.error.description);
-      alert.error(response.error.source);
-      alert.error(response.error.step);
-      alert.error(response.error.reason);
-      alert.error(response.error.metadata.order_id);
-      alert.error(response.error.metadata.payment_id);
-  });
-    rzp1.open();
+         ).then((resp)=>{
+            console.log(resp)
+            // ture case
+            let {id ,amount,amount_due,amount_paid,attempts,created_at,entity   }=resp.data
 
-    console.log(rzp1)
-      if(!result){
-        alert.error(result.msg)
-      }   
+
+            let options = {
+                "key": "rzp_test_MZKmCG9d2PjRde",
+                "amount": amount,
+                "name": "Inotebook",
+                "currency":"INR",
+                "order_id": id,    
+                "handler": async function (response){
+                
+                  // alert.success(response.razorpay_payment_id);
+                  // alert.success(response.razorpay_order_id);
+                  // alert.success(response.razorpay_signature)
+                  try{
+                   console.log(JSON.stringify(response))
+                   await verifyPayment(response);
+                  }
+                  catch(error){
+                    console.log(error)
+                  }
+                },
+                "prefill": {
+                    "email": email
+                },
+                "theme": {
+                    "color": "#61dafb"
+                }
+            };
+            console.log(options)
+            const rzp1 = new window.Razorpay(options); //instead of new Razorpay(options)
+            rzp1.on('payment.failed', function (response){
+              alert.error(response.error.code);
+              alert.error(response.error.description);
+              alert.error(response.error.source);
+              alert.error(response.error.step);
+              alert.error(response.error.reason);
+              alert.error(response.error.metadata.order_id);
+              alert.error(response.error.metadata.payment_id);
+          });
+            rzp1.open();
+         }).catch((err)=>{
+            
+            alert.error(err.response.data.msg || err.message || 'Technical Error' )
+         })
+        
+
+   
     }
     catch (error) {
-      alert.error(error)
+      alert.error(error.message)
     }
     }
     useEffect(() => {
