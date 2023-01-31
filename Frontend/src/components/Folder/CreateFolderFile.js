@@ -12,7 +12,7 @@ function CreateFile({ onUpdate }) {
     var FormData = require('form-data');
     var data = new FormData();
     data.append('fileName', fileName);
-
+    
     async function FileCreate() {
 
         try {

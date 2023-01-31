@@ -11,6 +11,7 @@ import Footer from './Footer';
 import ReadFile from './File/ReadFile';
 import Folder from './Folder/Folder';
 import ReadFolderFile from './Folder/ReadFolderFile';
+import Checkout from './Checkout';
 function Main() {
   return (
     <div>
@@ -24,6 +25,7 @@ function Main() {
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/reset-password" element={<ForgetPass />} />
           <Route exact path="/register" element={<Register />} />
+          <Route exact path="/checkout" element={<Checkout />} />
           <Route exact path="/readfile/:fileName" element={<ReadFile />} />
           <Route exact path="/:folderName/:fileName" element={<ReadFolderFile />} />
           <Route exact path="/:folderName" element={<Folder />} />

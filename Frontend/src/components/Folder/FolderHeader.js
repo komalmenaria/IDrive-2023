@@ -70,8 +70,8 @@ const [ storage , setStorage] = useState(0)
                     <div className="form-group">
                         <input type="range" className="form-control-range" id="formControlRange" />
                     </div>
-                    <center className='my-1'>{storage}  of 15.00 GB used</center>
-                    <center><button className='btn btn-primary my-1'>Buy Storage</button></center>
+                    <center className='my-1'>{storage}  of { !token ? "": newUser.provided_Storage} GB used</center>
+                    <center><button className='btn btn-primary my-1' onClick={()=>{Navigation('/checkout')}}>Buy Storage</button></center>
                 </form>
             </div>
             {

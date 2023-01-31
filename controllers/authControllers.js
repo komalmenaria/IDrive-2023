@@ -86,6 +86,7 @@ module.exports.login = async (req, res) => {
                 email: user.email,
                 role: 1,
                 storage:user.storage,
+                provided_Storage:user.provided_Storage,
                 folder:user.folder
             }
         })
