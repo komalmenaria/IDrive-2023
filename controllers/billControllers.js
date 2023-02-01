@@ -1,15 +1,12 @@
 const User = require("../models/User");
 const Bill = require("../models/Bill");
-const config = require("config");
 const Razorpay = require('razorpay');
-const key_id = config.get("key_id");
-const key_secret = config.get("key_secret");
 const crypto = require("crypto");
 
 module.exports.checkout = async (req, res) => {
 
     try {
-        let instance = new Razorpay({ key_id: key_id, key_secret: key_secret });
+        let instance = new Razorpay({ key_id: process.env.KEYID, key_secret: process.env.KEYSECRET });
         const userId = req.params.userId
         const purchased_storage = parseInt(req.body.storage)
         let user = await User.findOne({ _id: userId })

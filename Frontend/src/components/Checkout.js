@@ -96,7 +96,7 @@ function Checkout() {
 
 
             let options = {
-                "key": "rzp_test_MZKmCG9d2PjRde",
+                "key": process.env.KEYID,
                 "amount": amount,
                 "name": "Inotebook",
                 "currency":"INR",

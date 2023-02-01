@@ -1,13 +1,10 @@
 const User = require("../models/User");
 const Otp = require("../models/Otp");
 var nodemailer = require('nodemailer');
-const config = require("config");
 const AWS = require('aws-sdk');
-const accessKeyId = config.get("accessKeyId");
-const secretAccessKey = config.get("secretAccessKey");
 const s3 = new AWS.S3({
-    accessKeyId: accessKeyId,
-    secretAccessKey: secretAccessKey
+    accessKeyId: process.env.ACCESSKEYID,
+    secretAccessKey:  process.env.SECRETACCESSKEY
 });
 // const {errorHandler} = require("../util")
 const { generateHash, generateToken, compareHash } = require("../util")
@@ -23,7 +20,7 @@ module.exports.signup = async (req, res) => {
         if (user) return res.status(400).json({ msg: "User already exists" });
         let folderName = email.split(/[@]+/);
         const folderParams = {
-            Bucket: "inotebook2023",
+            Bucket: process.env.AWS_BUCKET,
             Key: `${folderName[0]}/`
         };
         await s3.putObject(folderParams, (err, data) => {

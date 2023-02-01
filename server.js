@@ -5,6 +5,7 @@ const config = require("config");
 const bodyParser = require('body-parser')
 const fileUpload = require("express-fileupload");
 var cors = require('cors')
+require('dotenv').config()
 
 const authRoutes = require('./routes/auth');
 const folderRoutes = require('./routes/folder');
@@ -38,7 +39,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // connecting to mongoDB and then running server on port 4000
-const dbURI = config.get("dbURI");
+const dbURI = process.env.MONGODBURL;
 const port = process.env.PORT || 4000;
 
 mongoose.set('strictQuery', true);

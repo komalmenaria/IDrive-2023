@@ -1,13 +1,9 @@
 const Folder = require("../models/Folder");
 const User = require("../models/User");
-const config = require("config");
 const AWS = require('aws-sdk');
-const accessKeyId = config.get("accessKeyId");
-
-const secretAccessKey = config.get("secretAccessKey");
 const s3 = new AWS.S3({
-    accessKeyId: accessKeyId,
-    secretAccessKey: secretAccessKey
+    accessKeyId:  process.env.ACCESSKEYID,
+    secretAccessKey:  process.env.SECRETACCESSKEY
 });
 
 module.exports.get_files = async (req, res) => {
@@ -22,7 +18,7 @@ module.exports.get_files = async (req, res) => {
             await user.FilesName.map(async (file) => {
                 // console.log(file)
                 const params = {
-                    Bucket: 'inotebook2023',
+                    Bucket: process.env.AWS_BUCKET,
                     Key: `${user.folder}/${file.name}`
                 };
                 const url = await s3.getSignedUrl('getObject', params);
@@ -59,7 +55,7 @@ module.exports.get_images = async (req, res) => {
             await user.ImagesName.map(async (file) => {
                 // console.log(file)
                 const params = {
-                    Bucket: 'inotebook2023',
+                    Bucket: process.env.AWS_BUCKET,
                     Key: `${user.folder}/${file.name}`
                 };
                 const url = await s3.getSignedUrl('getObject', params);
@@ -124,7 +120,7 @@ module.exports.upload_files = async (req, res) => {
 
                     const uploadParams = {
 
-                        Bucket: 'inotebook2023',
+                        Bucket: process.env.AWS_BUCKET,
                         Key: `${user.folder}/${key}`,
                         Body: allfiles[i].data
                     };
@@ -161,7 +157,7 @@ module.exports.upload_files = async (req, res) => {
                 user.FilesName.push({ name: key });
             }
             const params = {
-                Bucket: 'inotebook2023',
+                Bucket: process.env.AWS_BUCKET,
                 Key: `${user.folder}/${key}`,
                 Body: allfiles.data
             };
@@ -235,7 +231,7 @@ module.exports.upload_files_folder = async (req, res) => {
                     }
                     const uploadParams = {
 
-                        Bucket: 'inotebook2023',
+                        Bucket: process.env.AWS_BUCKET,
                         Key: `${user.folder}/${folderName}/${key}`,
                         Body: allfiles[i].data
                     };
@@ -276,7 +272,7 @@ module.exports.upload_files_folder = async (req, res) => {
                 folder.FilesName.push({ name: key });
             }
             const params = {
-                Bucket: 'inotebook2023',
+                Bucket: process.env.AWS_BUCKET,
                 Key: `${user.folder}/${folderName}/${key}`,
                 Body: allfiles.data
             };
@@ -322,7 +318,7 @@ module.exports.get_files_folder = async (req, res) => {
             await folder.FilesName.map(async (file) => {
                 // console.log(file)
                 const params = {
-                    Bucket: 'inotebook2023',
+                    Bucket: process.env.AWS_BUCKET,
                     Key: `${user.folder}/${folderName}/${file.name}`
                 };
                 const url = await s3.getSignedUrl('getObject', params);
@@ -365,7 +361,7 @@ module.exports.get_images_folder = async (req, res) => {
             await folder.ImagesName.map(async (file) => {
                 // console.log(file)
                 const params = {
-                    Bucket: 'inotebook2023',
+                    Bucket: process.env.AWS_BUCKET,
                     Key: `${user.folder}/${folderName}/${file.name}`
                 };
                 const url = await s3.getSignedUrl('getObject', params);

@@ -1,12 +1,9 @@
 const User = require("../models/User");
 const Folder = require("../models/Folder");
-const config = require("config");
 const AWS = require('aws-sdk');
-const accessKeyId = config.get("accessKeyId");
-const secretAccessKey = config.get("secretAccessKey");
 const s3 = new AWS.S3({
-    accessKeyId: accessKeyId,
-    secretAccessKey: secretAccessKey
+    accessKeyId:  process.env.ACCESSKEYID,
+    secretAccessKey:  process.env.SECRETACCESSKEY
 });
 
 module.exports.create_folder = async (req, res) => {
@@ -33,7 +30,7 @@ module.exports.create_folder = async (req, res) => {
         const mongoFolderKey = `${folderName}`;
         console.log(folderKey)
         const folderParams = {
-            Bucket: "inotebook2023",
+            Bucket: process.env.AWS_BUCKET,
             Key: folderKey
         };
         await s3.putObject(folderParams, (err, data) => {
@@ -86,7 +83,7 @@ module.exports.delete_folder = async (req, res) => {
         }
         else {
             let params = {
-                Bucket: "inotebook2023",
+                Bucket: process.env.AWS_BUCKET,
                 Prefix: `${parentFolder}/${folderName}/`
             };
 
@@ -105,7 +102,7 @@ module.exports.delete_folder = async (req, res) => {
             });
 
             params = {
-                Bucket: "inotebook2023",
+                Bucket: process.env.AWS_BUCKET,
                 Delete: { Objects: objects }
             };
             await s3.deleteObjects(params, function (err, data) {

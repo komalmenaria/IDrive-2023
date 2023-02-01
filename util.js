@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const config = require("config");
+require('dotenv').config()
 const bcrypt = require("bcrypt");
 // var Bugsnag = require('@bugsnag/js')
 // var BugsnagPluginExpress = require('@bugsnag/plugin-express')
@@ -35,7 +35,7 @@ module.exports.generateHash = (password) =>{
 
 module.exports.generateToken = (data) =>{
     return new Promise((resolve, reject) => {
-        jwt.sign(data, config.get("jwtsecret"), { expiresIn: '1h' }, function(err, token) {
+        jwt.sign(data, process.env.JWTSECRET, { expiresIn: '1h' }, function(err, token) {
             if(err) reject(err);
             resolve(token);
           });
