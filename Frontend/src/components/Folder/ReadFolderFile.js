@@ -15,6 +15,8 @@ function ReadFolderFile() {
     const [disabled, setDisable] = useState(true)
 
     const [fileData, setFileData] = useState("")
+    const [fileUrl, setFileUrl] = useState("")
+
     async function getFileData() {
         try {
             let result = await axios.get(`http://localhost:4000/api/readFile_folder/${newUser.id}/${folderName}/${fileName}`, {
@@ -30,7 +32,23 @@ function ReadFolderFile() {
             console.log(error)
         }
     }
+    async function getFileUrl() {
+        try {
+            console.log()
+            let result = await axios.get(`http://localhost:4000/api/get_folder_file_url/${newUser.id}/${folderName}/${fileName}`, {
+                headers: {
+                    'x-auth-token': token
+                }
+            })
+            if (result.status === 200) {
+                // console.log(result.data.fileUrl)
+                setFileUrl(result.data.fileUrl)
+            }
 
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     var FormData = require('form-data');
     var data = new FormData();
@@ -47,6 +65,8 @@ function ReadFolderFile() {
                 alert.success(result.data.msg);
                 setDisable(true)
                 getFileData()
+                getFileUrl()
+
             } else {
                 console.log(result.response.data.msg)
                 alert.error(result.response.data.msg)
@@ -89,6 +109,8 @@ function ReadFolderFile() {
 
     useEffect(() => {
         getFileData()
+        getFileUrl()
+
     }, [])
     return (
         <>
@@ -107,7 +129,10 @@ function ReadFolderFile() {
                         </nav>
                     </div>
                     <div><button type="button" className="btn btn-success mx-2" disabled={disabled} onClick={postfileUpdate} >Update File</button>
-                        <button type="button" className="btn btn-danger mx-2" onClick={deleteFile}>Delete File</button></div>
+                        <button type="button" className="btn btn-danger mx-2" onClick={deleteFile}>Delete File</button>
+                        <a  download href={fileUrl} className="btn btn-primary mx-2" >Download File</a>
+                        
+                        </div>
                 </div>
                 <div className="form-group">
                     <label htmlFor="exampleFormControlTextarea1" className='single-file'>{fileName} </label>

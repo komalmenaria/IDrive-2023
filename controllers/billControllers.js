@@ -23,13 +23,13 @@ module.exports.checkout = async (req, res) => {
         }
         
         if (!email ) {
-            res.status(400).json({ msg: "Please enter email" });
+            return res.status(400).json({ msg: "Please enter email" });
         }
         if (!storage ) {
-            res.status(400).json({ msg: "Please select storage" });
+            return res.status(400).json({ msg: "Please select storage" });
         }
         if (!amount ) {
-            res.status(400).json({ msg: "Please enter amount" });
+            return res.status(400).json({ msg: "Please enter amount" });
         }
 
         const options = {
@@ -43,12 +43,14 @@ module.exports.checkout = async (req, res) => {
             if (err) {
                 throw err
             } else {
+                
                 res.send(order)
-                amount / 100;
-                const newBill = new Bill({ name, email, storage, amount:amount / 100 });
-                await newBill.save()
                 user.provided_Storage += purchased_storage
                 user.save()
+                const newBill = new Bill({ name, email, storage, amount:amount});
+                await newBill.save()
+               
+               
             }
         });
       
@@ -62,7 +64,11 @@ module.exports.checkout = async (req, res) => {
 }
 
 module.exports.payment = async (req, res) => {
-    const userId = req.params.id;
+    let userId = req.params.userId;
+    let user = await User.findOne({ _id: userId })
+        if (!user) {
+            return res.status(400).send({ msg: "User not found" })
+        }
     console.log(req.body)
     let { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
     try {
@@ -80,7 +86,8 @@ module.exports.payment = async (req, res) => {
 
 
         }
-        res.send(response);
+       
+        return res.send(response);
 
     } catch (error) {
         res.status(500).send(error);

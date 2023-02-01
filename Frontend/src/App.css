@@ -107,3 +107,9 @@ border: 5px solid #008bdc;
   padding: 8px !important;
 
 }
+
+.download{
+ position: relative;
+ top: 0;
+ right: 189px;
+}

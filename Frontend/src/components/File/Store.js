@@ -3,6 +3,7 @@ import axios from 'axios';
 import Header from './Header';
 import { useNavigate } from 'react-router-dom';
 import { useAlert } from 'react-alert';
+import downloadImg from "../../assets/download.png"
 
 function Store() {
     const Navigate = useNavigate();    
@@ -65,7 +66,7 @@ function Store() {
         }
     }
     async function handleReadFile(file) {
-        console.log(file.name)
+        // console.log(file.url)
         Navigate(`/readfile/${file.name}`)
     }
     async function deleteImage(Image) {
@@ -155,7 +156,8 @@ function Store() {
                                         <div className='m-2' key={Image.name}>
                                             <img src={Image.url} className='img-thumbnail store-image' loading='lazy' alt={Image.name} height="200" width="200" />
                                             <span className="badge badge-danger" onClick={() => deleteImage(Image)}>&#10006;</span>
-                                            <span className="sr-only">unread messages</span>
+                                            <a className="badge badge-success download" download href={Image.url}><img src={downloadImg} alt="" width="20" height="20" /> </a>
+                                            
                                         </div>
                                     ))
                                 )

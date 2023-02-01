@@ -2,6 +2,8 @@ import React,{useEffect,useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import CreateFolderFile from '../Folder/CreateFolderFile'
 import UploadFolderFile from '../Folder/UploadFolderFile';
+import axios from 'axios';
+
 
 function FolderHeader({ onGrandchildUpdate }) {
 
@@ -12,6 +14,7 @@ function FolderHeader({ onGrandchildUpdate }) {
         Navigation("/login")
     }
 const [ storage , setStorage] = useState(0)
+const [ providedStorage , setprovidedStorage] = useState(0)
     const token = localStorage.getItem("token");
 
     const  bytesToHumanReadable = (
@@ -31,13 +34,28 @@ const [ storage , setStorage] = useState(0)
     )
 
    
+    async function getUserStorage() {
+        try {
+            let result = await axios.get(`http://localhost:4000/api/get_user_storage/${newUser.id}`, {
+                headers: {
+                    'x-auth-token': token
+                }
+            })
+            if (result.status === 200) {
+                setprovidedStorage(result.data)
+            }
 
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     useEffect(() => {
       
       if (!token) {
         Navigation("/login")
       }
+      getUserStorage()
       bytesToHumanReadable()
       const rangeInput = document.getElementById('formControlRange');
     
@@ -70,7 +88,7 @@ const [ storage , setStorage] = useState(0)
                     <div className="form-group">
                         <input type="range" className="form-control-range" id="formControlRange" />
                     </div>
-                    <center className='my-1'>{storage}  of { !token ? "": newUser.provided_Storage} GB used</center>
+                    <center className='my-1'>{storage}  out of { !token ? "": providedStorage} GB used</center>
                     <center><button className='btn btn-primary my-1' onClick={()=>{Navigation('/checkout')}}>Buy Storage</button></center>
                 </form>
             </div>

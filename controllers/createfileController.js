@@ -472,7 +472,7 @@ module.exports.delete_image = async (req, res) => {
             return res.status(400).send({ msg: "User not found" })
         }
         if (!ImageName) {
-            return res.status(400).json({ msg: "image name cant be empty" });
+            return res.status(400).json({ msg: "Image name cant be empty" });
         }
         let foundObj = await user.ImagesName.find(obj => obj.name === ImageName)
         if (!foundObj) {
@@ -508,5 +508,72 @@ module.exports.delete_image = async (req, res) => {
         return res.status(500).json({ msg: "Technical error occured" })
     }
 }
+
+
+module.exports.get_file_url = async (req, res) => {
+try {
+    let userId = req.params.userId
+    let fileName = req.params.fileName
+    let user = await User.findOne({ _id: userId })
+    if (!user) {
+        return res.status(400).send({ msg: "User not found" })
+    }
+    if (!fileName) {
+        return res.status(400).json({ msg: "File name cant be empty" });
+    }
+
+      s3.getSignedUrl('getObject', {  Bucket: 'inotebook2023', Key: `${user.folder}/${fileName}` }, (err, url) => {
+        if (err) {
+          console.log('Error', err);
+        } else {
+          return res.status(200).send({fileUrl:url})
+        }
+      });
+
+} catch (error) {
+    console.log(error)
+    return res.status(500).json({ msg: "Technical error occured" })
+}
+}
+
+module.exports.get_folder_file_url = async (req, res) => {
+    try {
+        let userId = req.params.userId;
+        let folderName = req.params.folderName
+        let user = await User.findOne({ _id: userId })
+        if (!user) {
+            return res.status(400).send({ msg: "User not found" })
+        }
+        let folder = await Folder.findOne({ userId, folderName })
+        if (!folder) {
+            return res.status(400).json({ msg: "folder not exist" });
+        }
+        let fileName = req.params.fileName;
+        if (!fileName) {
+            return res.status(400).json({ msg: "File name is required" });
+        }
+        let foundObj = await folder.FilesName.find(obj => obj.name === fileName)
+        if (!foundObj) {
+            return res.status(400).json({ msg: "File not exist" });
+        }
+        const params = {
+            Bucket: 'inotebook2023',
+            Key: `${user.folder}/${folderName}/${foundObj.name}`
+        };
+    
+          s3.getSignedUrl('getObject', params, (err, url) => {
+            if (err) {
+              console.log('Error', err);
+            } else {
+              return res.status(200).send({fileUrl:url})
+            }
+          });
+    
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ msg: "Technical error occured" })
+    }
+    }
+    
 
 

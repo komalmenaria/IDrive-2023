@@ -7,23 +7,43 @@ import { Link } from 'react-router-dom';
 
 function ReadFile() {
     const Navigate = useNavigate();
-    const { fileName } = useParams();
+    const { fileName } = useParams();  
     const alert = useAlert();
     const newUser = JSON.parse(localStorage.getItem("user-info"))
     const token = localStorage.getItem("token");
     const [disabled, setDisable] = useState(true)
 
     const [fileData, setFileData] = useState("")
+    const [fileUrl, setFileUrl] = useState("")
     async function getFileData() {
         try {
+            console.log()
             let result = await axios.get(`http://localhost:4000/api/readFile/${newUser.id}/${fileName}`, {
                 headers: {
                     'x-auth-token': token
                 }
             })
             if (result.status === 200) {
-                console.log(result.data.fileContent)
+                // console.log(result.data.fileContent)
                 setFileData(result.data.fileContent)
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async function getFileUrl() {
+        try {
+            console.log()
+            let result = await axios.get(`http://localhost:4000/api/get_file_url/${newUser.id}/${fileName}`, {
+                headers: {
+                    'x-auth-token': token
+                }
+            })
+            if (result.status === 200) {
+                // console.log(result.data.fileUrl)
+                setFileUrl(result.data.fileUrl)
             }
 
         } catch (error) {
@@ -47,6 +67,7 @@ function ReadFile() {
                 alert.success(result.data.msg);
                 setDisable(true)
                 getFileData()
+                getFileUrl()
             } else {
                 console.log(result.response.data.msg)
                 alert.error(result.response.data.msg)
@@ -86,6 +107,7 @@ function ReadFile() {
 
     useEffect(() => {
         getFileData()
+        getFileUrl()
     }, [])
 
     return (
@@ -103,7 +125,10 @@ function ReadFile() {
                         </nav>
                     </div>
                     <div><button type="button" className="btn btn-success mx-2" disabled={disabled} onClick={postfileUpdate} >Update File</button>
-                        <button type="button" className="btn btn-danger mx-2" onClick={deleteFile}>Delete File</button></div>
+                        <button type="button" className="btn btn-danger mx-2" onClick={deleteFile}>Delete File</button>
+                        
+                        <a  download href={fileUrl} className="btn btn-primary mx-2" >Download File</a>
+                        </div>
                 </div>
                 <div className="form-group">
                     <label htmlFor="exampleFormControlTextarea1" className='single-file'>{fileName} </label>

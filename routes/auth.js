@@ -8,6 +8,7 @@ router.post('/login', authController.login);
 router.get('/user', auth, authController.get_user);
 router.post('/email-send',  authController.emailSend);
 router.post('/change-password',  authController.changePassword);
+router.get('/get_user_storage/:userId',  authController.get_user_storage);
 
 
 

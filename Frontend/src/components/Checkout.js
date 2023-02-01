@@ -10,7 +10,8 @@ function Checkout() {
     const [email, setEmail] = useState("");
     const [storage, setStorage] = useState(0);
     const [amount, setAmount] = useState(0);
-
+ 
+  
    
     const token = localStorage.getItem("token");
     const newUser = JSON.parse(localStorage.getItem("user-info"))
@@ -47,6 +48,7 @@ function Checkout() {
              if(data.signatureIsValid){
               alert.success("Payment Successfull")
               resolve("success")
+              Navigation("/store")
              }
              else{
               reject(new Error("Payement verfication failed"))
@@ -59,8 +61,8 @@ function Checkout() {
         })
       }
 
-    async function handlePaymentProceed() {
-       
+    async function handlePaymentProceed(e) {
+       e.preventDefault();
         const formdata = new FormData();
         formdata.append('name', name);
         formdata.append('email', email);
@@ -156,15 +158,16 @@ function Checkout() {
                 <center><h1>Billing For Buy Storage</h1></center>
                 <div className="form-group">
                     <label htmlFor="name">Name</label>
-                    <input type="text" className="form-control" id="name" onChange={(e) => setName(e.target.value)} />
+                    <input type="text" className="form-control" required={true} id="name" onChange={(e) => setName(e.target.value)} />
                 </div>
                 <div className="form-group">
                     <label htmlFor="email">Email address</label>
-                    <input type="email" className="form-control" id="email" onChange={(e) => setEmail(e.target.value)} />
+                    <input type="email" className="form-control" required={true} id="email" onChange={(e) => setEmail(e.target.value)} />
                 </div>
                 <div className="form-group">
                     <label htmlFor="storage">Storage Size</label>
-                    <select className="form-control" id="storage" value={storage} onChange={(e) => setStorage(e.target.value)} >
+                    <select className="form-control"  required={true} id="storage" value={storage} onChange={(e) => 
+                      {setStorage(e.target.value); setAmount(e.target.value *  5000)}} >
                         <option  value={1}>1 GB</option>
                         <option  value={2}>2 GB</option>
                         <option  value={3}>3 GB</option>
@@ -173,8 +176,7 @@ function Checkout() {
                     </select>
                 </div>
                 <div className="form-group">
-                    <label htmlFor="amount">Amount</label>
-                    <input type="number" className="form-control" id="amount" onChange={(e) => setAmount(e.target.value)} />
+                  {amount > 0 ?  <h4>Total Amount : {amount} INR</h4> : ""}
                 </div>
                 <button type="submit" className="btn btn-primary" onClick={handlePaymentProceed}>Proceed to Buy</button>
 

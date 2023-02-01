@@ -202,3 +202,18 @@ const mailer = (email, otp) => {
         }
     })
 }
+
+module.exports.get_user_storage = async (req, res) => {
+    try {
+        let userId = req.params.userId;
+        let user = await User.findOne({ _id: userId })
+            if (!user) {
+                return res.status(400).send({ msg: "User not found" })
+            }
+    console.log(user.provided_Storage)
+    res.json(user.provided_Storage)
+    } catch (error) {
+        console.log(error)
+    }
+
+}
