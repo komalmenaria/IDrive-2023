@@ -67,11 +67,7 @@ const [ providedStorage , setprovidedStorage] = useState(0)
         <div >
             <CreateFolderFile onUpdate={onGrandchildUpdate} />
             <UploadFolderFile onUpdate={onGrandchildUpdate} />
-            <form className=" form-inline my-3 ">
-
-                <input className="form-control mr-sm-2" type="search" placeholder="Search Your Document" aria-label="Search" id='Search' />
-                <button className="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
-            </form>
+            
             <div className=" d-flex flex-column my-5">
                 <button type="button" className="btn btn-primary my-1" data-toggle="modal" data-target="#createFolderFile">
                     Create File

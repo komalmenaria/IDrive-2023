@@ -1,0 +1,48 @@
+close all;
+clear all;
+komal
+clc;
+w= [0 0 0 0 0 0 0 0 0;
+    0 1 1 0 0 0 1 0 0;
+    0 1 1 0 0 1 1 0 0;
+    0 1 1 0 1 1 0 0 0;
+    0 1 1 1 1 0 0 0 0;
+    0 1 1 0 1 1 0 0 0;
+    0 1 1 0 0 1 1 0 0;
+    0 1 1 0 0 0 1 1 0;
+    0 0 0 0 0 0 0 0 0
+    
+    
+    ];
+disp(w);
+se1 = strel('square',3);
+disp(se1);
+O1 = imerode(w,se1);
+O2 = imdilate(01,se1);
+
+C1 = imdilate(w,se1);
+c2 = imerode(C1,se1);
+
+subplot(2,3,1);
+imshow(w);
+title('original image');
+
+subplot(2,3,2);
+imshow(O1);
+title('Opening step 1 image');
+
+subplot(2,3,3);
+imshow(O2);
+title('Opening - Erosion followed by Dilation');
+
+subplot(2,3,4);
+imshow(w);
+title('original image');
+
+subplot(2,3,5);
+imshow(C1);
+title('Closing step 1');
+
+subplot(2,3,6);
+imshow(C2);
+title('Closing - Dilation  followed by Erosion');

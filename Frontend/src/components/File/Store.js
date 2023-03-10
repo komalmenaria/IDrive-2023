@@ -4,9 +4,10 @@ import Header from './Header';
 import { useNavigate } from 'react-router-dom';
 import { useAlert } from 'react-alert';
 import downloadImg from "../../assets/download.png"
+import ReadImage from './ReadImage';
 
 function Store() {
-    const Navigate = useNavigate();    
+    const Navigate = useNavigate();
     const [grandchildValue, setGrandchildValue] = useState(0);
     const alert = useAlert();
     function handleGrandchildUpdate(newValue) {
@@ -17,6 +18,8 @@ function Store() {
     const [allFolders, setAllFolders] = useState("");
     const [allFiles, setAllFiles] = useState("");
     const [allImages, setAllImages] = useState("");
+    const [modalimage, setImage] = useState(null);
+
     async function getFolders() {
         try {
             let result = await axios.get(`http://localhost:4000/api/folders/${newUser.id}`, {
@@ -100,17 +103,16 @@ function Store() {
         if (!token) {
             Navigate("/login")
         }
-       else{
-        getFolders()
-        getFiles()
-        getImages()
-       }
-    
+        else {
+            getFolders()
+            getFiles()
+            getImages()
+        }
     }, [grandchildValue])
 
     return (
         <>
-
+            <ReadImage modalImage={modalimage} />
 
             <div className="d-flex store">
                 <div className="col-sm-3 " style={{ backgroundColor: "#edf2fa" }}>
@@ -138,6 +140,7 @@ function Store() {
                             {allFiles && allFiles.length ?
                                 (
                                     allFiles.map((file) => (
+                                       
                                         <span key={file.name} onClick={() => handleReadFile(file)} className='single-file m-2' >{file.name}</span>
                                     ))
                                 )
@@ -153,11 +156,13 @@ function Store() {
                             {allImages && allImages.length ?
                                 (
                                     allImages.map((Image) => (
-                                        <div className='m-2' key={Image.name}>
-                                            <img src={Image.url} className='img-thumbnail store-image' loading='lazy' alt={Image.name} height="200" width="200" />
+                                        <div className='m-2' key={Image.name} >
+                                            <button type="button" className="btn mx-0 the-img-button" data-toggle="modal" data-target="#openimagemodal" id='openimagemodal'  onClick={() => {   setImage(Image.url) }}>
+                                                <img src={Image.url} className='img-thumbnail store-image' loading='lazy' alt={Image.name} height="200" width="200" style={{ cursor: "pointer" }} />
+                                            </button>
                                             <span className="badge badge-danger" onClick={() => deleteImage(Image)}>&#10006;</span>
                                             <a className="badge badge-success download" download href={Image.url}><img src={downloadImg} alt="" width="20" height="20" /> </a>
-                                            
+
                                         </div>
                                     ))
                                 )

@@ -1,10 +1,10 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-.login-form{
+.login-form {
   font-weight: 500;
   margin-left: 150px;
   background-color: #fff;
@@ -12,56 +12,62 @@
   border-radius: 5px;
   box-shadow: 10px 20px 50px 5px #818181;
 
-border: 5px solid #008bdc;
+  border: 5px solid #008bdc;
 
 }
 
-.register-background{
-  padding: 69px  20px;
+.register-background {
+  padding: 69px 20px;
   background-image: url("./assets/register.png");
- background-position-x: center;
- background-position-y: bottom;
- background-size: cover;
- background-position: bottom;
+  background-position-x: center;
+  background-position-y: bottom;
+  background-size: cover;
+  background-position: bottom;
 }
-.register-form{
+
+.register-form {
   background-color: #fff;
   padding: 10px 30px;
   box-shadow: 10px 20px 50px 5px #ffffff;
   border-radius: 5px;
-border: 5px solid #008bdc;
+  border: 5px solid #008bdc;
 }
-.about-container > p{
+
+.about-container>p {
   font-size: 20px;
   font-weight: 500;
-  overflow:"hidden"
+  overflow: "hidden"
 }
-.about-container{
+
+.about-container {
   margin-bottom: 0 !important;
 }
-.email-verify-form{
+
+.email-verify-form {
   padding: 3rem !important;
   border: 2px solid rgb(104, 194, 236);
   border-radius: 5px;
   box-shadow: 10px 20px 60px grey;
 }
 
-.single-folder{
+.single-folder {
   background-color: #ecd822;
   padding: 5px 15px;
   color: #fff;
   border-radius: 5px;
   margin: 5px 10px;
   font-weight: 600;
-  cursor:pointer
+  cursor: pointer
 }
-.cloud-icon{
+
+.cloud-icon {
   font-size: 50px;
   color: #008bdc;
   padding: 0px 10px !important;
   margin: 0 !important;
 }
-.footer{
+
+.footer {
   background-color: #000;
   color: #fff;
   display: flex;
@@ -69,34 +75,42 @@ border: 5px solid #008bdc;
   align-items: center;
   text-align: center;
   width: 100%;
-  position:absolute;
-  bottom:0
+  position: absolute;
+  bottom: 0
 }
-.frame-image-div{
-  height:290px;
+
+.frame-image-div {
+  height: 290px;
   overflow: scroll
 }
-.frame-folder-image-div{
-  height:450px;
+
+.frame-folder-image-div {
+  height: 450px;
   overflow: scroll
 }
-.store , .folder{
-  overflow:hidden;
+
+.store,
+.folder {
+  overflow: hidden;
 }
-.store-image{
+
+.store-image {
   object-fit: cover;
 }
-.single-file{
-  text-decoration:none;
-  background-color:#008bdc;
-  color:#fff;
-  padding: 10px 20px ;
-  border-radius:5px;
-  cursor:pointer
+
+.single-file {
+  text-decoration: none;
+  background-color: #008bdc;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer
 }
-.single-file:hover{
-  text-decoration:none;
+
+.single-file:hover {
+  text-decoration: none;
 }
+
 .badge {
 
   vertical-align: top !important;
@@ -108,8 +122,12 @@ border: 5px solid #008bdc;
 
 }
 
-.download{
- position: relative;
- top: 0;
- right: 189px;
+.download {
+  position: relative;
+  top: 0;
+  right: 189px;
+}
+
+#openimagemodal:hover,#openimagemodal:active,#openimagemodal {
+ border: none !important;
 }

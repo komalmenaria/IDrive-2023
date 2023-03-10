@@ -114,7 +114,7 @@ module.exports.upload_files = async (req, res) => {
                     if (fileExtension == 'jpg' || fileExtension == 'png' || fileExtension == 'jpeg') {
                         user.ImagesName.push({ name: key });
                     }
-                    else if (fileExtension == 'doc' || fileExtension == 'txt' || fileExtension == 'py' || fileExtension == 'pdf') {
+                    else if (fileExtension == 'docx' || fileExtension == 'doc' || fileExtension == 'txt' || fileExtension == 'py' || fileExtension == 'pdf') {
                         user.FilesName.push({ name: key });
                     }
 
@@ -153,7 +153,7 @@ module.exports.upload_files = async (req, res) => {
             if (fileExtension == 'jpg' || fileExtension == 'png' || fileExtension == 'jpeg') {
                 user.ImagesName.push({ name: key });
             }
-            else if (fileExtension == 'doc' || fileExtension == 'txt' || fileExtension == 'py' || fileExtension == 'pdf') {
+            else if (fileExtension == 'docx' || fileExtension == 'doc' || fileExtension == 'txt' || fileExtension == 'py' || fileExtension == 'pdf') {
                 user.FilesName.push({ name: key });
             }
             const params = {
